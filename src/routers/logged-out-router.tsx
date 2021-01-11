@@ -1,62 +1,19 @@
 import React from "react";
-import { useForm } from "react-hook-form";
-import { isLoggedInVar } from "../apollo";
-
-interface IForm {
-  email: string;
-  password: string;
-}
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import CreateAccount from "../pages/create-account";
+import Login from "../pages/login";
 
 export default function LoggedOutRouter() {
-  const { register, watch, handleSubmit, errors } = useForm<IForm>();
-  // console.log(watch());
-
-  const onSubmit = () => {
-    console.log(watch("email"));
-  };
-
-  const onInvalid = () => {
-    console.log("cant' create account");
-  };
-  console.log(errors);
-
   return (
-    <div>
-      <h1>Logged Out</h1>
-      <button onClick={() => isLoggedInVar(false)}>LogIn</button>
-      <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
-        <div>
-          <input
-            ref={register({
-              required: "This is required",
-              // validate: (email: string) => email.includes("@gmail.com"),
-              pattern: /^[A-Za-z0-9._%+-]+@gmail.com$/,
-            })}
-            type="email"
-            name="email"
-            // required
-            placeholder="email"
-          />
-          {errors.email?.message && (
-            <span className="font-bold text-red-500"> {errors.email.message}</span>
-          )}
-          {errors.email?.type === "pattern" && (
-            <span className="font-bold text-red-500">Only gamil allowed</span>
-          )}
-        </div>
-        <div>
-          <input
-            ref={register({ required: true })}
-            type="password"
-            name="password"
-            required
-            placeholder="password"
-          />
-        </div>
-        <button type="submit" className="bg-yellow-500">
-          submit
-        </button>
-      </form>
-    </div>
+    <Router>
+      <Switch>
+        <Route path="/create-account">
+          <CreateAccount />
+        </Route>
+        <Route path="/">
+          <Login />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
