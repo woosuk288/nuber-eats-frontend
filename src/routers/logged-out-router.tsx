@@ -2,8 +2,13 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { isLoggedInVar } from "../apollo";
 
+interface IForm {
+  email: string;
+  password: string;
+}
+
 export default function LoggedOutRouter() {
-  const { register, watch, handleSubmit, errors } = useForm();
+  const { register, watch, handleSubmit, errors } = useForm<IForm>();
   // console.log(watch());
 
   const onSubmit = () => {
@@ -24,14 +29,20 @@ export default function LoggedOutRouter() {
           <input
             ref={register({
               required: "This is required",
-              validate: (email: string) => email.includes("@gmail.com"),
-              // pattern: /^[A-Za-z0-9._%+-]+@gmail.com$/,
+              // validate: (email: string) => email.includes("@gmail.com"),
+              pattern: /^[A-Za-z0-9._%+-]+@gmail.com$/,
             })}
             type="email"
             name="email"
-            required
+            // required
             placeholder="email"
           />
+          {errors.email?.message && (
+            <span className="font-bold text-red-500"> {errors.email.message}</span>
+          )}
+          {errors.email?.type === "pattern" && (
+            <span className="font-bold text-red-500">Only gamil allowed</span>
+          )}
         </div>
         <div>
           <input
