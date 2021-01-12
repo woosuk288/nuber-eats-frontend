@@ -31,21 +31,23 @@ export default function Login() {
     }
   };
 
-  const [loginMutation, { data: loginMutaionResult }] = useMutation<
+  const [loginMutation, { data: loginMutaionResult, loading }] = useMutation<
     loginMutation,
     loginMutationVariables
   >(LOGIN_MUTATION, { onCompleted });
 
   const onSubmit = () => {
-    const { email, password } = getValues();
-    loginMutation({
-      variables: {
-        loginInput: {
-          email,
-          password,
+    if (!loading) {
+      const { email, password } = getValues();
+      loginMutation({
+        variables: {
+          loginInput: {
+            email,
+            password,
+          },
         },
-      },
-    });
+      });
+    }
   };
 
   return (
@@ -77,7 +79,7 @@ export default function Login() {
             <FormError errorMessage="Password must be more than 10 chars." />
           )}
 
-          <button className="btn">Login</button>
+          <button className="btn">{loading ? "Loading..." : "Login"}</button>
           {loginMutaionResult?.login.error && (
             <FormError errorMessage={loginMutaionResult.login.error} />
           )}
