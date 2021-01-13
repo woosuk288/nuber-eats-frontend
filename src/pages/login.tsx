@@ -3,6 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { FormError } from "../components/form-error";
 import { loginMutation, loginMutationVariables } from "../__generated__/loginMutation";
+import nuberLogo from "../images/eats-logo.svg";
 
 const LOGIN_MUTATION = gql`
   mutation loginMutation($loginInput: LoginInput!) {
@@ -51,10 +52,11 @@ export default function Login() {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-800">
-      <div className="bg-white w-full max-w-lg py-10 rounded-lg text-center">
-        <h3 className="text-2xl text-gray-800">Log In</h3>
-        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3 mt-5 px-5">
+    <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
+      <div className="w-full max-w-screen-sm flex flex-col items-center">
+        <img src={nuberLogo} alt="logo" className="w-52  mb-5" />
+        <h4 className="w-full font-medium text-left text-3xl mb-5">Welcom back</h4>
+        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3 mt-5 px-5 w-full">
           <input
             ref={register({ required: "Email is required" })}
             name="email"
