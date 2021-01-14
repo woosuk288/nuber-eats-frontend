@@ -49,7 +49,7 @@ export default function CreateAccount() {
       createAccount: { ok },
     } = data;
     if (ok) {
-      history.push("/login");
+      history.push("/");
     }
   };
 
@@ -119,7 +119,7 @@ export default function CreateAccount() {
         </form>
         <div>
           Alreay have an account?{" "}
-          <Link to="/login" className="text-lime-600 hover:underline">
+          <Link to="/" className="text-lime-600 hover:underline">
             Log in now
           </Link>{" "}
         </div>
