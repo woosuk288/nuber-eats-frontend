@@ -1,12 +1,14 @@
-import { ApolloError, gql, useMutation } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FormError } from "../components/form-error";
 import { loginMutation, loginMutationVariables } from "../__generated__/loginMutation";
 import nuberLogo from "../images/eats-logo.svg";
-import Helmet from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { Button } from "../components/button";
 import { Link } from "react-router-dom";
+import { authToken, isLoggedInVar } from "../apollo";
+import { LOCALSTORAGE_TOKEN } from "../constants";
 
 const LOGIN_MUTATION = gql`
   mutation loginMutation($loginInput: LoginInput!) {
@@ -30,10 +32,12 @@ export default function Login() {
 
   const onCompleted = (data: loginMutation) => {
     const {
-      login: { error, ok, token },
+      login: { ok, token },
     } = data;
-    if (ok) {
-      console.log(token);
+    if (ok && token) {
+      localStorage.setItem(LOCALSTORAGE_TOKEN, token);
+      authToken(token);
+      isLoggedInVar(true);
     }
   };
 
@@ -66,7 +70,10 @@ export default function Login() {
         <h4 className="w-full font-medium text-left text-3xl mb-5 px-5">Welcom back</h4>
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3 mt-5 px-5 w-full mb-5">
           <input
-            ref={register({ required: "Email is required" })}
+            ref={register({
+              required: "Email is required",
+              pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            })}
             name="email"
             placeholder="Email"
             type="email"
@@ -74,9 +81,11 @@ export default function Login() {
             className="input"
           />
           {errors.email?.message && <FormError errorMessage={errors.email.message} />}
-
+          {errors.email?.type === "pattern" && (
+            <FormError errorMessage={"Please enter a valid email"} />
+          )}
           <input
-            ref={register({ required: "Password is required", minLength: 8 })}
+            ref={register({ required: "Password is required", minLength: 5 })}
             name="password"
             placeholder="Password"
             type="password"
@@ -86,7 +95,7 @@ export default function Login() {
           {errors.password?.message && <FormError errorMessage={errors.password.message} />}
 
           {errors.password?.type === "minLength" && (
-            <FormError errorMessage="Password must be more than 10 chars." />
+            <FormError errorMessage="Password must be more than 5 chars." />
           )}
 
           <Button canClick={formState.isValid} loading={loading} actionText="Log In"></Button>

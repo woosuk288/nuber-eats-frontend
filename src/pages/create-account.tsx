@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { FormError } from "../components/form-error";
 
 import nuberLogo from "../images/eats-logo.svg";
-import Helmet from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { Button } from "../components/button";
 import { Link, useHistory } from "react-router-dom";
 import { UserRole } from "../__generated__/globalTypes";
