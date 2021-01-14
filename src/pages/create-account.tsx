@@ -1,4 +1,4 @@
-import { ApolloError, gql, useMutation } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FormError } from "../components/form-error";
@@ -6,9 +6,12 @@ import { FormError } from "../components/form-error";
 import nuberLogo from "../images/eats-logo.svg";
 import Helmet from "react-helmet";
 import { Button } from "../components/button";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { UserRole } from "../__generated__/globalTypes";
-import { watch } from "fs";
+import {
+  CreateAccountnMutation,
+  CreateAccountnMutationVariables,
+} from "../__generated__/CreateAccountnMutation";
 
 const CREATE_ACCOUNT_MUTATION = gql`
   mutation CreateAccountnMutation($createAccountInput: CreateAccountInput!) {
@@ -40,11 +43,27 @@ export default function CreateAccount() {
     },
   });
 
-  const [createAccountMutation, { data: createAccountMutaionResult, loading }] = useMutation(
-    CREATE_ACCOUNT_MUTATION
-  );
+  const history = useHistory();
+  const onCompleted = (data: CreateAccountnMutation) => {
+    const {
+      createAccount: { ok },
+    } = data;
+    if (ok) {
+      history.push("/login");
+    }
+  };
 
-  const onSubmit = () => {};
+  const [createAccountMutation, { data: createAccountMutaionResult, loading }] = useMutation<
+    CreateAccountnMutation,
+    CreateAccountnMutationVariables
+  >(CREATE_ACCOUNT_MUTATION, { onCompleted });
+
+  const onSubmit = () => {
+    if (!loading) {
+      const { email, password, role } = getValues();
+      createAccountMutation({ variables: { createAccountInput: { email, password, role } } });
+    }
+  };
   console.log(watch());
 
   return (
@@ -57,7 +76,10 @@ export default function CreateAccount() {
         <h4 className="w-full font-medium text-left text-3xl mb-5 px-5">Let's get started</h4>
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3 mt-5 px-5 w-full mb-5">
           <input
-            ref={register({ required: "Email is required" })}
+            ref={register({
+              required: "Email is required",
+              pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            })}
             name="email"
             placeholder="Email"
             type="email"
@@ -65,7 +87,9 @@ export default function CreateAccount() {
             className="input"
           />
           {errors.email?.message && <FormError errorMessage={errors.email.message} />}
-
+          {errors.email?.type === "pattern" && (
+            <FormError errorMessage={"Please enter a valid email"} />
+          )}
           <input
             ref={register({ required: "Password is required", minLength: 8 })}
             name="password"
@@ -89,8 +113,8 @@ export default function CreateAccount() {
             loading={loading}
             actionText="Create Account"
           ></Button>
-          {createAccountMutaionResult?.login.error && (
-            <FormError errorMessage={createAccountMutaionResult.login.error} />
+          {createAccountMutaionResult?.createAccount.error && (
+            <FormError errorMessage={createAccountMutaionResult.createAccount.error} />
           )}
         </form>
         <div>
