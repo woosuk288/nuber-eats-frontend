@@ -9,7 +9,6 @@ import { HelmetProvider } from "react-helmet-async";
 
 function App() {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
-  console.log(isLoggedIn);
 
   return (
     <React.StrictMode>
