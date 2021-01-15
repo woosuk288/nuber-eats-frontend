@@ -1,17 +1,81 @@
+import { gql, useMutation } from "@apollo/client";
 import React from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "../../components/button";
 import { useMe } from "../../hooks/useMe";
+import { editProfile, editProfileVariables } from "../../__generated__/editProfile";
+
+const EDIT_PROFILE_MUTATION = gql`
+  mutation editProfile($input: EditProfileInput!) {
+    editProfile(input: $input) {
+      ok
+      error
+    }
+  }
+`;
+
+interface IFormProps {
+  email?: string;
+  password?: string;
+}
 
 export default function EditProfile() {
   const { data: userData } = useMe();
+  const onCompleted = (data: editProfile) => {
+    const {
+      editProfile: { ok },
+    } = data;
+    if (ok) {
+      //update the cache
+    }
+  };
+  const [editProfile, { loading }] = useMutation<editProfile, editProfileVariables>(
+    EDIT_PROFILE_MUTATION,
+    { onCompleted }
+  );
+  const { register, handleSubmit, getValues, formState } = useForm<IFormProps>({
+    mode: "onChange",
+    defaultValues: {
+      email: userData?.me.email,
+    },
+  });
+  const onSubmit = () => {
+    const { email, password } = getValues();
+
+    editProfile({
+      variables: {
+        input: {
+          email,
+          ...(password !== "" && { password }),
+        },
+      },
+    });
+  };
 
   return (
     <div className="flex flex-col items-center justify-center mt-52">
       <h4 className="font-medium text-left text-2xl mb-3">Edit Profile</h4>
-      <form className="grid gap-3 mt-5 px-5 w-full mb-5 max-w-screen-sm">
-        <input className="input" type="email" placeholder="Email" />
-        <input className="input" type="password" placeholder="Password" />
-        <Button loading={false} canClick={true} actionText="Save Profile"></Button>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="grid gap-3 mt-5 px-5 w-full mb-5 max-w-screen-sm"
+      >
+        <input
+          ref={register({
+            pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+          })}
+          className="input"
+          name="email"
+          type="email"
+          placeholder="Email"
+        />
+        <input
+          ref={register}
+          className="input"
+          name="password"
+          type="password"
+          placeholder="Password"
+        />
+        <Button loading={loading} canClick={formState.isValid} actionText="Save Profile"></Button>
       </form>
     </div>
   );
