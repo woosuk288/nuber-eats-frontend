@@ -18,8 +18,6 @@ const ClientRoutes = [
 export default function LoggedInRouter() {
   const { data, loading, error } = useMe();
 
-  console.log(data);
-
   if (!data || loading || error) {
     return (
       <div className="h-screen flex justify-center items-center">
