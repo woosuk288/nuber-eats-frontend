@@ -19,7 +19,7 @@ export default function Header() {
           <img src={nuberLogo} alt="Nuber Eats" className="w-24" />
 
           <span className="text-xs">
-            <Link to="/my-profile">
+            <Link to="/edit-profile">
               <FontAwesomeIcon icon={faUser} className="text-xl" />
             </Link>
           </span>
