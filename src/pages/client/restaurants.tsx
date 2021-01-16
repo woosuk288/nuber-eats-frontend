@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import { url } from "inspector";
-import React from "react";
+import React, { useState } from "react";
+import Restaurant from "../../components/restaurant";
 import {
   restaurantsPageQuery,
   restaurantsPageQueryVariables,
@@ -39,18 +40,20 @@ const RESTAURANTS_QUERY = gql`
 `;
 
 export default function Restaurants() {
-  const { data, loading, error } = useQuery<restaurantsPageQuery, restaurantsPageQueryVariables>(
+  const [page, setPage] = useState(1);
+  const { data, loading } = useQuery<restaurantsPageQuery, restaurantsPageQueryVariables>(
     RESTAURANTS_QUERY,
     {
       variables: {
         input: {
-          page: 1,
+          page,
         },
       },
     }
   );
 
-  console.log({ data });
+  const onNextPageClick = () => setPage((current) => current + 1);
+  const onPrevPageClick = () => setPage((current) => current - 1);
 
   return (
     <div>
@@ -74,17 +77,39 @@ export default function Restaurants() {
               </div>
             ))}
           </div>
-          <div className="grid grid-cols-3 gap-x-6 gap-y-10 mt-10">
+          <div className="grid grid-cols-3 gap-x-6 gap-y-10 mt-16">
             {data?.restaurants.results?.map((restaurant) => (
-              <div>
-                <div
-                  style={{ backgroundImage: `url(${restaurant.coverImg})` }}
-                  className="bg-red-500 py-24 bg-cover bg-center mb-3"
-                ></div>
-                <h3 className="text-lg font-medium">{restaurant.name}</h3>
-                <span>{restaurant.category?.name}</span>
-              </div>
+              <Restaurant
+                coverImg={restaurant.coverImg}
+                name={restaurant.name}
+                categoryName={restaurant.category?.name}
+              />
             ))}
+          </div>
+          <div className="grid grid-cols-3 text-center max-w-md mt-10 items-center mx-auto">
+            <div>
+              {page > 1 && (
+                <button
+                  onClick={onPrevPageClick}
+                  className="focus:outline-none font-medium text-2xl"
+                >
+                  &larr;
+                </button>
+              )}
+            </div>
+            <span>
+              Page {page} of {data?.restaurants.totalPages}
+            </span>
+            <div>
+              {page !== data?.restaurants.totalPages && (
+                <button
+                  onClick={onNextPageClick}
+                  className="focus:outline-none font-medium text-2xl"
+                >
+                  &rarr;
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
