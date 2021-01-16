@@ -65,12 +65,24 @@ export default function Restaurants() {
         <div className="max-w-screen-xl mx-auto mt-8">
           <div className="flex justify-around ">
             {data?.allCategories.categories?.map((category) => (
-              <div className="flex flex-col items-center cursor-pointer">
+              <div className="flex flex-col items-center cursor-pointer group">
                 <div
-                  className="w-14 h-14 rounded-full bg-cover hover:bg-gray-100"
+                  className="w-16 h-16 rounded-full bg-cover group-hover:bg-gray-100"
                   style={{ backgroundImage: `url(${category.coverImg})` }}
                 ></div>
                 <span className="mt-1 text-sm text-center font-medium">{category.name}</span>
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-3 gap-x-6 gap-y-10 mt-10">
+            {data?.restaurants.results?.map((restaurant) => (
+              <div>
+                <div
+                  style={{ backgroundImage: `url(${restaurant.coverImg})` }}
+                  className="bg-red-500 py-24 bg-cover bg-center mb-3"
+                ></div>
+                <h3 className="text-lg font-medium">{restaurant.name}</h3>
+                <span>{restaurant.category?.name}</span>
               </div>
             ))}
           </div>
