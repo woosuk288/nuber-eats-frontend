@@ -1,5 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { Button } from "../../components/button";
 import { useMe } from "../../hooks/useMe";
@@ -20,13 +21,21 @@ interface IFormProps {
 }
 
 export default function EditProfile() {
-  const { data: userData } = useMe();
-  const onCompleted = (data: editProfile) => {
+  const { data: userData, refetch } = useMe();
+
+  const onCompleted = async (data: editProfile) => {
     const {
       editProfile: { ok },
     } = data;
-    if (ok) {
+    if (ok && userData) {
       //update the cache
+      const {
+        me: { email: prevEmail },
+      } = userData;
+      const { email: newEmail } = getValues();
+      if (prevEmail !== newEmail) {
+        await refetch();
+      }
     }
   };
   const [editProfile, { loading }] = useMutation<editProfile, editProfileVariables>(
@@ -54,6 +63,9 @@ export default function EditProfile() {
 
   return (
     <div className="flex flex-col items-center justify-center mt-52">
+      <Helmet>
+        <title>Edit Profile | Nuber Eats</title>
+      </Helmet>
       <h4 className="font-medium text-left text-2xl mb-3">Edit Profile</h4>
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -67,6 +79,7 @@ export default function EditProfile() {
           name="email"
           type="email"
           placeholder="Email"
+          autoComplete="username"
         />
         <input
           ref={register}
@@ -74,6 +87,7 @@ export default function EditProfile() {
           name="password"
           type="password"
           placeholder="Password"
+          autoComplete="current-password"
         />
         <Button loading={loading} canClick={formState.isValid} actionText="Save Profile"></Button>
       </form>
