@@ -80,7 +80,7 @@ export default function Restaurants() {
         />
       </form>
       {!loading && (
-        <div className="max-w-screen-xl mx-auto mt-8">
+        <div className="px-4 xl:px-0 max-w-screen-xl mx-auto mt-8 ">
           {/* categories */}
           <div className="flex justify-around ">
             {data?.allCategories.categories?.map((category) => (
