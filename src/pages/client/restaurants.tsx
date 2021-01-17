@@ -2,9 +2,9 @@ import { gql, useQuery } from "@apollo/client";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Restaurant from "../../components/restaurant";
-import { RESTAURANT_FRAGMENT } from "../../fragments";
+import { CATEGORY_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragments";
 import {
   restaurantsPageQuery,
   restaurantsPageQueryVariables,
@@ -16,11 +16,7 @@ const RESTAURANTS_QUERY = gql`
       error
       ok
       categories {
-        id
-        name
-        coverImg
-        slug
-        restaurantCount
+        ...CategoryParts
       }
     }
     restaurants(input: $input) {
@@ -34,6 +30,7 @@ const RESTAURANTS_QUERY = gql`
     }
   }
   ${RESTAURANT_FRAGMENT}
+  ${CATEGORY_FRAGMENT}
 `;
 
 interface IFormProps {
@@ -87,13 +84,15 @@ export default function Restaurants() {
           {/* categories */}
           <div className="flex justify-around ">
             {data?.allCategories.categories?.map((category) => (
-              <div key={category.id} className="flex flex-col items-center cursor-pointer group">
-                <div
-                  className="w-16 h-16 rounded-full bg-cover group-hover:bg-gray-100"
-                  style={{ backgroundImage: `url(${category.coverImg})` }}
-                ></div>
-                <span className="mt-1 text-sm text-center font-medium">{category.name}</span>
-              </div>
+              <Link key={category.id} to={`/category/${category.slug}`}>
+                <div className="flex flex-col items-center cursor-pointer group">
+                  <div
+                    className="w-16 h-16 rounded-full bg-cover group-hover:bg-gray-100"
+                    style={{ backgroundImage: `url(${category.coverImg})` }}
+                  ></div>
+                  <span className="mt-1 text-sm text-center font-medium">{category.name}</span>
+                </div>
+              </Link>
             ))}
           </div>
           {/* restaurants */}
