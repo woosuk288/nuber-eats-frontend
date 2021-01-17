@@ -13,7 +13,7 @@ export interface restaurantsPageQuery_allCategories_categories {
   __typename: "Category";
   id: number;
   name: string;
-  coverImg: string;
+  coverImg: string | null;
   slug: string;
   restaurantCount: number;
 }
