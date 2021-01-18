@@ -75,6 +75,7 @@ export default function Category() {
             {data?.category.restaurants?.map((restaurant) => (
               <Restaurant
                 key={restaurant.id}
+                id={restaurant.id}
                 coverImg={restaurant.coverImg}
                 name={restaurant.name}
                 categoryName={restaurant.category?.name}

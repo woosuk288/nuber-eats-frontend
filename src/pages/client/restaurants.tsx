@@ -100,6 +100,7 @@ export default function Restaurants() {
             {data?.restaurants.results?.map((restaurant) => (
               <Restaurant
                 key={restaurant.id}
+                id={restaurant.id}
                 coverImg={restaurant.coverImg}
                 name={restaurant.name}
                 categoryName={restaurant.category?.name}
