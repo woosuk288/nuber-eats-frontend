@@ -31,7 +31,7 @@ const ClientRoutes = [
   </Route>,
 ];
 
-export default function LoggedInRouter() {
+export const LoggedInRouter = () => {
   const { data, loading, error } = useMe();
 
   if (!data || loading || error) {
@@ -53,4 +53,4 @@ export default function LoggedInRouter() {
       </Switch>
     </Router>
   );
-}
+};
