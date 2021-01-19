@@ -7,11 +7,12 @@ import nuberLogo from "../images/eats-logo.svg";
 
 export default function Header() {
   const { data } = useMe();
+  // console.log('for header test ', data);
   return (
     <>
       {!data?.me.verified && (
         <div className="bg-red-500 p-3 text-center text-xs text-white">
-          <span> Plase verify your email</span>
+          <span>Plase verify your email.</span>
         </div>
       )}
       <header className="py-4">

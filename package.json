@@ -33,8 +33,8 @@
     "apollo:codegen": "apollo client:codegen src/__generated__ --target=typescript --outputFlat",
     "apollo:codegen:delete": "rm -rf src/__generated__",
     "build": "react-scripts build",
-    "test": "react-scripts test --verbose",
-    "test:coverage": "npm run test -- --coverage --watchAll=false",
+    "test": "react-scripts test",
+    "test:coverage": "npm run test -- --coverage",
     "eject": "react-scripts eject"
   },
   "jest": {
