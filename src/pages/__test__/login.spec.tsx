@@ -81,12 +81,52 @@ describe("<Login />", () => {
       },
     });
     mockedClient.setRequestHandler(LOGIN_MUTATION, mockedMutationResponse);
+    jest.spyOn(Storage.prototype, "setItem");
+    await waitFor(() => {
+      userEvent.type(email, formData.email);
+      userEvent.type(password, formData.password);
+      userEvent.click(submitBtn);
+    });
+
+    expect(mockedMutationResponse).toHaveBeenCalledTimes(1);
+    // 먼저 {} 빈칸을 넣어보고 에러에서 그 값을 확인할 수 있다.
+    expect(mockedMutationResponse).toHaveBeenCalledWith({
+      loginInput: {
+        email: formData.email,
+        password: formData.password,
+      },
+    });
+    expect(localStorage.setItem).toHaveBeenCalledWith("nuber-token", "XXXXX");
+  });
+
+  it("should submit form and call mutation with error", async () => {
+    const { getByPlaceholderText, debug, getByRole } = renderResult;
+    const formData = {
+      email: "real@test.com",
+      password: "12345",
+    };
+    const email = getByPlaceholderText(/email/i);
+    const password = getByPlaceholderText(/password/i);
+    const submitBtn = getByRole("button");
+
+    const mockedMutationResponse = jest.fn().mockResolvedValue({
+      data: {
+        login: {
+          ok: false,
+          error: "error-hohoho",
+        },
+      },
+    });
+    mockedClient.setRequestHandler(LOGIN_MUTATION, mockedMutationResponse);
 
     await waitFor(() => {
       userEvent.type(email, formData.email);
       userEvent.type(password, formData.password);
       userEvent.click(submitBtn);
     });
+
+    let errorMessage = getByRole("alert");
+    expect(errorMessage).toHaveTextContent(/error-hohoho/i);
 
     expect(mockedMutationResponse).toHaveBeenCalledTimes(1);
     // 먼저 {} 빈칸을 넣어보고 에러에서 그 값을 확인할 수 있다.
