@@ -63,6 +63,7 @@
     ]
   },
   "devDependencies": {
-    "@types/react-router-dom": "^5.1.7"
+    "@types/react-router-dom": "^5.1.7",
+    "mock-apollo-client": "^1.0.0"
   }
 }

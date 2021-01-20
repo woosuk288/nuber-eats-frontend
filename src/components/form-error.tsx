@@ -3,5 +3,7 @@ interface IFormErrorProps {
 }
 
 export const FormError = ({ errorMessage }: IFormErrorProps) => (
-  <span className="font-medium text-red-500">{errorMessage}</span>
+  <span role="alert" className="font-medium text-red-500">
+    {errorMessage}
+  </span>
 );
