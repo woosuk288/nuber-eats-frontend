@@ -34,7 +34,7 @@ export default function Login() {
     const {
       login: { ok, token },
     } = data;
-    console.log(data);
+    // console.log("login: ", data);
     if (ok && token) {
       localStorage.setItem(LOCALSTORAGE_TOKEN, token);
       authToken(token);

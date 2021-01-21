@@ -64,7 +64,6 @@ export default function CreateAccount() {
       createAccountMutation({ variables: { createAccountInput: { email, password, role } } });
     }
   };
-  console.log(watch());
 
   return (
     <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
