@@ -13,7 +13,7 @@ import {
   CreateAccountnMutationVariables,
 } from "../__generated__/CreateAccountnMutation";
 
-const CREATE_ACCOUNT_MUTATION = gql`
+export const CREATE_ACCOUNT_MUTATION = gql`
   mutation CreateAccountnMutation($createAccountInput: CreateAccountInput!) {
     createAccount(input: $createAccountInput) {
       ok
@@ -49,6 +49,7 @@ export default function CreateAccount() {
       createAccount: { ok },
     } = data;
     if (ok) {
+      alert("Account Created! Log in now!");
       history.push("/");
     }
   };
@@ -90,7 +91,7 @@ export default function CreateAccount() {
             <FormError errorMessage={"Please enter a valid email"} />
           )}
           <input
-            ref={register({ required: "Password is required", minLength: 8 })}
+            ref={register({ required: "Password is required", minLength: 5 })}
             name="password"
             placeholder="Password"
             type="password"
