@@ -7,6 +7,20 @@ import { render, waitFor } from "../../test-utils";
 import { UserRole } from "../../__generated__/globalTypes";
 import CreateAccount, { CREATE_ACCOUNT_MUTATION } from "../create-account";
 
+const mockPush = jest.fn();
+
+jest.mock("react-router-dom", () => {
+  const realModule = jest.requireActual("react-router-dom");
+  return {
+    ...realModule,
+    useHistory: () => {
+      return {
+        push: mockPush,
+      };
+    },
+  };
+});
+
 describe("<CreateAccount />", () => {
   let mockedClient: MockApolloClient;
   let renderResult: RenderResult;
@@ -89,8 +103,13 @@ describe("<CreateAccount />", () => {
     });
     expect(window.alert).toHaveBeenCalledTimes(1);
     expect(window.alert).toHaveBeenCalledWith("Account Created! Log in now!");
+    expect(mockPush).toHaveBeenCalledWith("/");
 
     const mutaionError = getByRole("alert");
     expect(mutaionError).toHaveTextContent("mutation-error");
+  });
+
+  afterAll(() => {
+    jest.clearAllMocks();
   });
 });
