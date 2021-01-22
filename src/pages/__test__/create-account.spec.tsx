@@ -1,9 +1,8 @@
 import { ApolloProvider } from "@apollo/client";
-import { getByPlaceholderText, RenderResult } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { createMockClient, MockApolloClient } from "mock-apollo-client";
-import { render, waitFor } from "../../test-utils";
+import { render, waitFor, RenderResult } from "../../test-utils";
 import { UserRole } from "../../__generated__/globalTypes";
 import CreateAccount, { CREATE_ACCOUNT_MUTATION } from "../create-account";
 
