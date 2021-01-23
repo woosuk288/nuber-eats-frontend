@@ -1,7 +1,7 @@
 describe("Log In", () => {
   const user = cy;
   it("should see login page", () => {
-    cy.visit("/").title().should("eq", "Login | Nuber Eats");
+    user.visit("/").title().should("eq", "Login | Nuber Eats");
   });
 
   it("should see email and password validation errors", () => {
