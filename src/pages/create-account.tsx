@@ -101,7 +101,7 @@ export default function CreateAccount() {
           {errors.password?.message && <FormError errorMessage={errors.password.message} />}
 
           {errors.password?.type === "minLength" && (
-            <FormError errorMessage="Password must be more than 10 chars." />
+            <FormError errorMessage="Password must be more than 5 chars." />
           )}
           <select ref={register({ required: true })} name="role" id="">
             {Object.keys(UserRole).map((role) => (

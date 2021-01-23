@@ -18,16 +18,12 @@ describe("Log In", () => {
     user.findByRole("alert").should("have.text", "Password is required");
   });
 
-  it("should fill out the form", () => {
+  it("should fill out the form and log in", () => {
     user.visit("/");
     user.findByPlaceholderText(/email/i).type("client12345@naver.com");
     user.findByPlaceholderText(/password/i).type("12345");
     user.findByRole("button").should("not.have.class", "pointer-events-none").click();
 
     user.window().its("localStorage.nuber-token").should("be.a", "string");
-  });
-
-  it("should sign up", () => {
-    user.visit("create-account");
   });
 });
