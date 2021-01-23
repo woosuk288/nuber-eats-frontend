@@ -24,9 +24,7 @@ describe("Create Account", () => {
       if (operationName === "CreateAccountnMutation") {
         // req.reply() with a callback will send the request to the destination server
         req.reply((res) => {
-          res.send({
-            data: { createAccount: { ok: true, error: null, __typename: "CreateAccountOutput" } },
-          });
+          res.send({ fixture: "auth/create-account.json" });
         });
       }
     });
