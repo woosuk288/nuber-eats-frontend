@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { Dish } from "../../components/dish";
 import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragments";
 import { myRestaurant, myRestaurantVariables } from "../../__generated__/myRestaurant";
+import { VictoryAxis, VictoryBar, VictoryChart } from "victory";
 
 export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
@@ -72,6 +73,27 @@ export const MyRestaurant = () => {
               ))}
             </div>
           )}
+        </div>
+        <div className="mt-20 mb-10">
+          <h4 className="text-center text-2xl font-medium">Sales</h4>
+          <div className="max-w-lg w-full mx-auto">
+            <VictoryChart domainPadding={20}>
+              <VictoryAxis
+                dependentAxis
+                label="Amount of Money"
+                tickValues={[10, 20, 30, 40, 50, 60]}
+                tickFormat={["10k", "20k", "30k", "40k", "50k", "60k"]}
+              />
+              <VictoryAxis label="Days of Life" />
+              <VictoryBar
+                data={[
+                  { x: 10, y: 20 },
+                  { x: 20, y: 40 },
+                  { x: 30, y: 60 },
+                ]}
+              />
+            </VictoryChart>
+          </div>
         </div>
       </div>
     </div>
