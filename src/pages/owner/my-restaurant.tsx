@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { Dish } from "../../components/dish";
 import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragments";
 import { myRestaurant, myRestaurantVariables } from "../../__generated__/myRestaurant";
-import { VictoryAxis, VictoryBar, VictoryChart } from "victory";
+import { VictoryAxis, VictoryBar, VictoryChart, VictoryPie } from "victory";
 
 export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
@@ -36,7 +36,17 @@ export const MyRestaurant = () => {
       },
     },
   });
-  console.log(data);
+
+  const chartData = [
+    { x: 1, y: 2000 },
+    { x: 2, y: 3000 },
+    { x: 3, y: 5000 },
+    { x: 4, y: 10000 },
+    { x: 5, y: 2000 },
+    { x: 6, y: 7000 },
+    { x: 7, y: 8000 },
+  ];
+
   return (
     <div>
       <div
@@ -80,19 +90,17 @@ export const MyRestaurant = () => {
             <VictoryChart domainPadding={20}>
               <VictoryAxis
                 dependentAxis
-                label="Amount of Money"
-                tickValues={[10, 20, 30, 40, 50, 60]}
-                tickFormat={["10k", "20k", "30k", "40k", "50k", "60k"]}
+                // label="Amount of Money"
+                // tickValues={[10, 20, 30, 40, 50, 60]}
+                tickFormat={(step) => `$${step / 1000}/K`}
               />
-              <VictoryAxis label="Days of Life" />
-              <VictoryBar
-                data={[
-                  { x: 10, y: 20 },
-                  { x: 20, y: 40 },
-                  { x: 30, y: 60 },
-                ]}
+              <VictoryAxis
+                // label="Days"
+                tickFormat={(step) => `Day ${step}`}
               />
+              <VictoryBar data={chartData} />
             </VictoryChart>
+            <VictoryPie colorScale={["tomato", "orange", "gold", "cyan", "navy"]} />
           </div>
         </div>
       </div>
