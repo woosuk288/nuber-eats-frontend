@@ -16,7 +16,7 @@ export default function Header() {
         </div>
       )}
       <header className="py-4">
-        <div className="w-full px-5 xl:px-0 max-w-screen-xl mx-auto flex  justify-between items-center">
+        <div className="w-full px-5 xl:px-0 container flex  justify-between items-center">
           <Link to="/">
             <img src={nuberLogo} alt="Nuber Eats" className="w-24" />
           </Link>

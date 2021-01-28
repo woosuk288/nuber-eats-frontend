@@ -4,10 +4,12 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: VerifiedUser
+// GraphQL fragment: OrderParts
 // ====================================================
 
-export interface VerifiedUser {
-  __typename: "User";
-  verified: boolean;
+export interface OrderParts {
+  __typename: "Order";
+  id: number;
+  createdAt: any;
+  total: number | null;
 }
