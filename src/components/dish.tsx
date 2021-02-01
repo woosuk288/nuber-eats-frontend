@@ -10,6 +10,8 @@ interface IDishProps {
   isOrderStarted?: boolean;
   options?: restaurant_restaurant_restaurant_menu_options[] | null;
   addItemToOrder?: (dishId: number) => void;
+  removeFromOrder?: (dishId: number) => void;
+  isSelected?: boolean;
 }
 
 export const Dish = ({
@@ -21,12 +23,26 @@ export const Dish = ({
   isOrderStarted = false,
   options,
   addItemToOrder,
+  removeFromOrder,
+  isSelected = false,
 }: IDishProps) => {
-  console.log(options);
+  const onClick = () => {
+    if (isOrderStarted) {
+      if (!isSelected && addItemToOrder) {
+        return addItemToOrder(id);
+      }
+      if (isSelected && removeFromOrder) {
+        return removeFromOrder(id);
+      }
+    }
+  };
+
   return (
     <div
-      className="cursor-pointer px-8 py-4 border hover:border-gray-800 transition-all"
-      onClick={() => (isOrderStarted && addItemToOrder ? addItemToOrder(id) : null)}
+      className={`cursor-pointer px-8 py-4 border hover:border-gray-800 transition-all ${
+        isSelected && "border-gray-800"
+      }`}
+      onClick={onClick}
     >
       <div className="mb-5">
         <h3 className="text-lg font-medium">{name}</h3>

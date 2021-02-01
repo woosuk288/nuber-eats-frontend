@@ -50,13 +50,24 @@ export default function RestaurantDetail() {
   );
 
   const [isOrderStarted, setIsOrderStarted] = useState(false);
-  const [orderItems, setOrderItems] = useState<CreateOrderitemInput[]>();
+  const [orderItems, setOrderItems] = useState<CreateOrderitemInput[]>([]);
   const triggerStartOrder = () => {
     setIsOrderStarted(true);
   };
-  const addItemToOrder = (dishId: number) => {
-    setOrderItems((current) => [{ dishId }]);
+  const isSelected = (dishId: number) => {
+    return Boolean(orderItems?.find((order) => order.dishId === dishId));
   };
+  const addItemToOrder = (dishId: number) => {
+    if (isSelected(dishId)) {
+      return;
+    }
+    setOrderItems((current) => [{ dishId }, ...current]);
+  };
+  const removeFromOrder = (dishId: number) => {
+    setOrderItems((current) => current.filter((order) => order.dishId !== dishId));
+  };
+
+  console.log(orderItems);
 
   return (
     <div>
@@ -72,11 +83,12 @@ export default function RestaurantDetail() {
       </div>
       <div className="container mt-20 pb-32 flex flex-col items-end">
         <button className="btn px-10" onClick={triggerStartOrder}>
-          Start Order
+          {isOrderStarted ? "Ordering" : "Start Order"}
         </button>
         <div className="w-full grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
           {restaurant?.restaurant?.menu.map((dish) => (
             <Dish
+              isSelected={isSelected(dish.id)}
               key={dish.id}
               id={dish.id}
               name={dish.name}
@@ -86,6 +98,7 @@ export default function RestaurantDetail() {
               isOrderStarted={isOrderStarted}
               options={dish.options}
               addItemToOrder={addItemToOrder}
+              removeFromOrder={removeFromOrder}
             />
           ))}
         </div>
