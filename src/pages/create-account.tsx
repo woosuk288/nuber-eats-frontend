@@ -29,14 +29,7 @@ interface ICreateAccountForm {
 }
 
 export default function CreateAccount() {
-  const {
-    register,
-    getValues,
-    errors,
-    handleSubmit,
-    formState,
-    watch,
-  } = useForm<ICreateAccountForm>({
+  const { register, getValues, errors, handleSubmit, formState } = useForm<ICreateAccountForm>({
     mode: "onChange",
     defaultValues: {
       role: UserRole.Client,

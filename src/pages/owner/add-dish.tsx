@@ -30,7 +30,7 @@ interface IForm {
 export const AddDish = () => {
   const { id } = useParams<IParams>();
   const history = useHistory();
-  const [createDishMutation, { data, loading }] = useMutation<createDish, createDishVariables>(
+  const [createDishMutation, { loading }] = useMutation<createDish, createDishVariables>(
     CREATE_DISH_MUTATION,
     { refetchQueries: [{ query: MY_RESTAURANT_QUERY, variables: { input: { id: +id } } }] }
   );

@@ -12,7 +12,7 @@ import {
   VictoryLine,
   VictoryPie,
   VictoryTheme,
-  VictoryTooltip,
+  // VictoryTooltip,
   VictoryVoronoiContainer,
 } from "victory";
 
@@ -60,6 +60,9 @@ export const MyRestaurant = () => {
     { x: 6, y: 7000 },
     { x: 7, y: 8000 },
   ];
+
+  const orders = data?.myRestaurant.restaurant?.orders;
+  const yVal = orders?.map((order) => order.total ?? 0).reduce((a, b) => Math.max(a, b), 0);
 
   return (
     <div>
@@ -109,10 +112,7 @@ export const MyRestaurant = () => {
               containerComponent={<VictoryVoronoiContainer />}
               theme={VictoryTheme.material}
               maxDomain={{
-                y:
-                  (data?.myRestaurant.restaurant?.orders
-                    .map((order) => order.total ?? 0)
-                    .reduce((a = 0, b) => Math.max(a, b)) ?? 0) + 10,
+                y: yVal ? yVal + 10 : 0,
               }}
             >
               <VictoryLine

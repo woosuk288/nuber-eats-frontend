@@ -23,7 +23,7 @@ interface IRestaurantParams {
 
 export default function RestaurantDetail() {
   const { id } = useParams<IRestaurantParams>();
-  const { loading, data: { restaurant } = {} } = useQuery<restaurant, restaurantVariables>(
+  const { data: { restaurant } = {} } = useQuery<restaurant, restaurantVariables>(
     RESTAURANT_QUERY,
     {
       variables: {
