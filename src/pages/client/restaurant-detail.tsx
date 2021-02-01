@@ -1,8 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Dish } from "../../components/dish";
 import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragments";
+import { CreateOrderitemInput } from "../../__generated__/globalTypes";
 import { restaurant, restaurantVariables } from "../../__generated__/restaurant";
 
 const RESTAURANT_QUERY = gql`
@@ -22,6 +23,15 @@ const RESTAURANT_QUERY = gql`
   ${DISH_FRAGMENT}
 `;
 
+const CREATE_ORDER_MUTATION = gql`
+  mutation createOrder($input: CreateOrderInput!) {
+    createOrder(input: $input) {
+      ok
+      error
+    }
+  }
+`;
+
 interface IRestaurantParams {
   id: string;
 }
@@ -39,6 +49,15 @@ export default function RestaurantDetail() {
     }
   );
 
+  const [isOrderStarted, setIsOrderStarted] = useState(false);
+  const [orderItems, setOrderItems] = useState<CreateOrderitemInput[]>();
+  const triggerStartOrder = () => {
+    setIsOrderStarted(true);
+  };
+  const addItemToOrder = (dishId: number) => {
+    setOrderItems((current) => [{ dishId }]);
+  };
+
   return (
     <div>
       <div
@@ -51,17 +70,25 @@ export default function RestaurantDetail() {
           <h6 className="text-sm">{restaurant?.restaurant?.address}</h6>
         </div>
       </div>
-      <div className="container grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
-        {restaurant?.restaurant?.menu.map((dish) => (
-          <Dish
-            key={dish.id}
-            name={dish.name}
-            price={dish.price}
-            description={dish.description}
-            isCustomer={true}
-            options={dish.options}
-          />
-        ))}
+      <div className="container mt-20 pb-32 flex flex-col items-end">
+        <button className="btn px-10" onClick={triggerStartOrder}>
+          Start Order
+        </button>
+        <div className="w-full grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
+          {restaurant?.restaurant?.menu.map((dish) => (
+            <Dish
+              key={dish.id}
+              id={dish.id}
+              name={dish.name}
+              price={dish.price}
+              description={dish.description}
+              isCustomer={true}
+              isOrderStarted={isOrderStarted}
+              options={dish.options}
+              addItemToOrder={addItemToOrder}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
