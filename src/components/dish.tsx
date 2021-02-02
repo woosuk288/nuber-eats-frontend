@@ -12,7 +12,8 @@ interface IDishProps {
   options?: restaurant_restaurant_restaurant_menu_options[] | null;
   addItemToOrder?: (dishId: number) => void;
   removeFromOrder?: (dishId: number) => void;
-  addOptionToItem?: (dishId: number, newOption: any) => void;
+  // addOptionToItem?: (dishId: number, newOption: any) => void;
+  children?: React.ReactNode;
 }
 
 export const Dish = ({
@@ -26,7 +27,7 @@ export const Dish = ({
   options,
   addItemToOrder,
   removeFromOrder,
-  addOptionToItem,
+  children,
 }: IDishProps) => {
   const onClick = () => {
     if (isOrderStarted) {
@@ -56,16 +57,7 @@ export const Dish = ({
       {isCustomer && options && (
         <div>
           <h5 className="mt-5 mb-3 font-medium">Dish Options:</h5>
-          {options?.map((option, index) => (
-            <span
-              className="flex border items-center"
-              key={index}
-              onClick={() => addOptionToItem && addOptionToItem(id, { name: option.name })}
-            >
-              <h6 className="mr-2">{option.name}</h6>
-              <h6 className="text-sm opacity-75">(₩{option.extra})</h6>
-            </span>
-          ))}
+          {children}
         </div>
       )}
     </div>

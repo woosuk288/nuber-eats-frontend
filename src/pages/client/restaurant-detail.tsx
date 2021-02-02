@@ -78,8 +78,23 @@ export default function RestaurantDetail() {
     const options = oldItem?.options ? [...oldItem?.options, newOption] : [newOption];
 
     if (oldItem && options) {
-      removeFromOrder(dishId);
-      setOrderItems((current) => [{ dishId, options: options }, ...current]);
+      const hasOption = oldItem.options?.find((option) => option.name === newOption.name);
+
+      if (!hasOption) {
+        removeFromOrder(dishId);
+        setOrderItems((current) => [{ dishId, options: options }, ...current]);
+      }
+    }
+  };
+
+  const getOptionFromItem = (item: CreateOrderitemInput, optionName: string) => {
+    return item.options?.find((option) => option.name === optionName);
+  };
+
+  const isOptionSelected = (dishId: number, optionName: string) => {
+    const item = getItem(dishId);
+    if (item) {
+      return Boolean(getOptionFromItem(item, optionName));
     }
   };
 
@@ -115,8 +130,20 @@ export default function RestaurantDetail() {
               options={dish.options}
               addItemToOrder={addItemToOrder}
               removeFromOrder={removeFromOrder}
-              addOptionToItem={addOptionToItem}
-            />
+            >
+              {dish.options?.map((option, index) => (
+                <span
+                  className={`flex border items-center ${
+                    isOptionSelected(dish.id, option.name) && "border-gray-800"
+                  }`}
+                  key={index}
+                  onClick={() => addOptionToItem && addOptionToItem(dish.id, { name: option.name })}
+                >
+                  <h6 className="mr-2">{option.name}</h6>
+                  <h6 className="text-sm opacity-75">(₩{option.extra})</h6>
+                </span>
+              ))}
+            </Dish>
           ))}
         </div>
       </div>
