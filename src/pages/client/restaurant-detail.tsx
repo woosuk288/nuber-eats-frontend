@@ -54,8 +54,11 @@ export default function RestaurantDetail() {
   const triggerStartOrder = () => {
     setIsOrderStarted(true);
   };
+  const getItem = (dishId: number) => {
+    return orderItems?.find((order) => order.dishId === dishId);
+  };
   const isSelected = (dishId: number) => {
-    return Boolean(orderItems?.find((order) => order.dishId === dishId));
+    return Boolean(getItem(dishId));
   };
   const addItemToOrder = (dishId: number) => {
     if (isSelected(dishId)) {
@@ -65,6 +68,19 @@ export default function RestaurantDetail() {
   };
   const removeFromOrder = (dishId: number) => {
     setOrderItems((current) => current.filter((order) => order.dishId !== dishId));
+  };
+  const addOptionToItem = (dishId: number, newOption: any) => {
+    if (!isSelected(dishId)) {
+      return;
+    }
+
+    const oldItem = getItem(dishId);
+    const options = oldItem?.options ? [...oldItem?.options, newOption] : [newOption];
+
+    if (oldItem && options) {
+      removeFromOrder(dishId);
+      setOrderItems((current) => [{ dishId, options: options }, ...current]);
+    }
   };
 
   console.log(orderItems);
@@ -99,6 +115,7 @@ export default function RestaurantDetail() {
               options={dish.options}
               addItemToOrder={addItemToOrder}
               removeFromOrder={removeFromOrder}
+              addOptionToItem={addOptionToItem}
             />
           ))}
         </div>
