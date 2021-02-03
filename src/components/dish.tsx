@@ -47,9 +47,18 @@ export const Dish = ({
       }`}
     >
       <div className="mb-5">
-        <h3 className="text-lg font-medium">
+        <h3 className="text-lg font-medium flex">
           {name}
-          {isOrderStarted && <button onClick={onClick}>{isSelected ? "Remove" : "Add"}</button>}
+          {isOrderStarted && (
+            <button
+              className={`ml-auto py-1 px-3 focus:outline-none text-sm  text-white ${
+                isSelected ? "bg-red-500" : " bg-lime-600"
+              }`}
+              onClick={onClick}
+            >
+              {isSelected ? "Remove" : "Add"}
+            </button>
+          )}
         </h3>
         <h4 className="font-medium">{description}</h4>
       </div>
