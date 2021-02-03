@@ -4,7 +4,7 @@ import Header from "../components/header";
 import { useMe } from "../hooks/useMe";
 import { NotFound } from "../pages/404";
 import Category from "../pages/client/category";
-import RestaurantDetail from "../pages/client/restaurant-detail";
+import ClientRestaurant from "../pages/client/client-restaurant";
 import Restaurants from "../pages/client/restaurants";
 import Search from "../pages/client/search";
 import { AddDish } from "../pages/owner/add-dish";
@@ -29,7 +29,7 @@ const clientRoutes = [
   },
   {
     path: "/restaurants/:id",
-    component: <RestaurantDetail />,
+    component: <ClientRestaurant />,
   },
 ];
 

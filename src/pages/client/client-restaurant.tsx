@@ -36,7 +36,7 @@ interface IRestaurantParams {
   id: string;
 }
 
-export default function RestaurantDetail() {
+export default function ClientRestaurant() {
   const { id } = useParams<IRestaurantParams>();
   const { data: { restaurant } = {} } = useQuery<restaurant, restaurantVariables>(
     RESTAURANT_QUERY,
