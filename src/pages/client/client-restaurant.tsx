@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Dish } from "../../components/dish";
+import { DishOption } from "../../components/dish-option";
 import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragments";
 import { CreateOrderitemInput } from "../../__generated__/globalTypes";
 import { restaurant, restaurantVariables } from "../../__generated__/restaurant";
@@ -69,21 +70,34 @@ export default function ClientRestaurant() {
   const removeFromOrder = (dishId: number) => {
     setOrderItems((current) => current.filter((order) => order.dishId !== dishId));
   };
-  const addOptionToItem = (dishId: number, newOption: any) => {
+  const addOptionToItem = (dishId: number, newOption: string) => {
     if (!isSelected(dishId)) {
       return;
     }
 
     const oldItem = getItem(dishId);
-    const options = oldItem?.options ? [...oldItem?.options, newOption] : [newOption];
+    const options = oldItem?.options
+      ? [...oldItem?.options, { name: newOption }]
+      : [{ name: newOption }];
 
     if (oldItem && options) {
-      const hasOption = oldItem.options?.find((option) => option.name === newOption.name);
+      const hasOption = oldItem.options?.find((option) => option.name === newOption);
 
       if (!hasOption) {
         removeFromOrder(dishId);
-        setOrderItems((current) => [{ dishId, options: options }, ...current]);
+        setOrderItems((current) => [{ dishId, options }, ...current]);
       }
+    }
+  };
+
+  const removeOptionFromItem = (dishId: number, optionName: string) => {
+    const item = getItem(dishId);
+    if (item) {
+      removeFromOrder(dishId);
+      setOrderItems((current) => [
+        { dishId, options: item.options?.filter((option) => option.name !== optionName) },
+        ...current,
+      ]);
     }
   };
 
@@ -96,6 +110,7 @@ export default function ClientRestaurant() {
     if (item) {
       return Boolean(getOptionFromItem(item, optionName));
     }
+    return false;
   };
 
   console.log(orderItems);
@@ -132,16 +147,15 @@ export default function ClientRestaurant() {
               removeFromOrder={removeFromOrder}
             >
               {dish.options?.map((option, index) => (
-                <span
-                  className={`flex border items-center ${
-                    isOptionSelected(dish.id, option.name) && "border-gray-800"
-                  }`}
+                <DishOption
                   key={index}
-                  onClick={() => addOptionToItem && addOptionToItem(dish.id, { name: option.name })}
-                >
-                  <h6 className="mr-2">{option.name}</h6>
-                  <h6 className="text-sm opacity-75">(₩{option.extra})</h6>
-                </span>
+                  dishId={dish.id}
+                  name={option.name}
+                  extra={option.extra}
+                  isOptionSelected={isOptionSelected(dish.id, option.name)}
+                  addOptionToItem={addOptionToItem}
+                  removeOptionFromItem={removeOptionFromItem}
+                />
               ))}
             </Dish>
           ))}
