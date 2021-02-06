@@ -125,7 +125,7 @@ export default function ClientRestaurant() {
     const {
       createOrder: { ok, orderId },
     } = data;
-    if (data.createOrder.ok) {
+    if (ok) {
       history.push(`/orders/${orderId}`);
     }
   };
@@ -138,6 +138,8 @@ export default function ClientRestaurant() {
   });
 
   const triggerConfirmOrder = () => {
+    if (placingOrder) return;
+
     if (orderItems.length === 0) {
       alert("Can't place empty order");
       return;
