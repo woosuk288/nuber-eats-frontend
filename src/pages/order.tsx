@@ -1,9 +1,10 @@
-import { gql, useQuery, useSubscription } from "@apollo/client";
+import { gql, useQuery /* , useSubscription */ } from "@apollo/client";
 import React from "react";
 import { Helmet } from "react-helmet-async";
 import { useParams } from "react-router-dom";
 import { FULL_ORDER_FRAGMENT } from "../fragments";
 import { getOrder, getOrderVariables } from "../__generated__/getOrder";
+import { orderUpdates } from "../__generated__/orderUpdates";
 
 const GET_ORDER_QUERY = gql`
   query getOrder($input: GetOrderInput!) {
@@ -31,16 +32,15 @@ interface IParams {
   id: string;
 }
 
+interface SubscriptionData {
+  subscriptionData: {
+    data: orderUpdates;
+  };
+}
+
 export const Order = () => {
   const params = useParams<IParams>();
-  const { data } = useQuery<getOrder, getOrderVariables>(GET_ORDER_QUERY, {
-    variables: {
-      input: {
-        id: +params.id,
-      },
-    },
-  });
-  const { data: subscriptionData } = useSubscription(ORDER_SUBSCRIPTION, {
+  const { data, subscribeToMore } = useQuery<getOrder, getOrderVariables>(GET_ORDER_QUERY, {
     variables: {
       input: {
         id: +params.id,
@@ -48,8 +48,43 @@ export const Order = () => {
     },
   });
 
+  // TODO: 코드 변경 새로 고침시 에러남 graphql 업데이트 기다려야 할 듯. -> TypeError: Cannot read property 'subscribeToMore' of undefined
+  React.useEffect(() => {
+    if (data?.getOrder.ok && subscribeToMore && params.id) {
+      console.log("subscribeToMore", typeof subscribeToMore);
+      subscribeToMore({
+        document: ORDER_SUBSCRIPTION,
+        variables: { input: { id: +params.id } },
+        updateQuery: (prev, { subscriptionData }: SubscriptionData) => {
+          // console.log("prev", prev);
+          // console.log("updateQuery", subscriptionData.data.orderUpdates);
+
+          if (!data) return prev;
+          return {
+            getOrder: {
+              ...prev.getOrder,
+              order: {
+                ...subscriptionData.data.orderUpdates,
+              },
+            },
+          };
+        },
+      });
+    }
+  }, [data, params.id, subscribeToMore]);
+
+  // const {
+  //   data: subscriptionData
+  // } =  useSubscription(ORDER_SUBSCRIPTION, {
+  //   variables: {
+  //     input: {
+  //       id: +params.id,
+  //     },
+  //   },
+  // });
+
   console.log(data);
-  console.log(subscriptionData);
+  // console.log(subscriptionData);
 
   return (
     <div className="mt-32 container flex justify-center">
