@@ -72,7 +72,7 @@ export const MyRestaurant = () => {
     if (subscriptionData?.pendingOrders.id) {
       history.push(`/orders/${subscriptionData.pendingOrders.id}`);
     }
-  }, [subscriptionData]);
+  }, [subscriptionData, history]);
 
   const chartData = [
     { x: 1, y: 2000 },
