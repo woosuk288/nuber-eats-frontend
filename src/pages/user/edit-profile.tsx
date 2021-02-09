@@ -2,7 +2,9 @@ import { gql, useMutation } from "@apollo/client";
 import React from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
+import { authToken, isLoggedInVar } from "../../apollo";
 import { Button } from "../../components/button";
+import { LOCALSTORAGE_TOKEN } from "../../constants";
 import { useMe } from "../../hooks/useMe";
 import { editProfile, editProfileVariables } from "../../__generated__/editProfile";
 
@@ -61,6 +63,13 @@ export default function EditProfile() {
     });
   };
 
+  const logout = () => {
+    window.location.href = "/";
+    localStorage.removeItem(LOCALSTORAGE_TOKEN);
+    authToken(null);
+    isLoggedInVar(false);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center mt-52">
       <Helmet>
@@ -91,6 +100,9 @@ export default function EditProfile() {
         />
         <Button loading={loading} canClick={formState.isValid} actionText="Save Profile"></Button>
       </form>
+      <div onClick={logout} className="btn mt-20 px-10 cursor-pointer bg-red-500 hover:bg-red-300">
+        Log Out
+      </div>
     </div>
   );
 }
