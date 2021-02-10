@@ -6,9 +6,13 @@ interface ICoords {
   lng: number;
 }
 
+interface IDriverProps extends ICoords {
+  $hover?: any;
+}
+
 export const Dashboard = () => {
   const [driverCoords, setDriverCoords] = useState<ICoords>({ lat: 35.255634, lng: 128.612937 });
-  const [map, setMap] = useState<any>();
+  const [map, setMap] = useState<google.maps.Map>();
   const [maps, setMaps] = useState<any>();
 
   const position = {
@@ -39,7 +43,16 @@ export const Dashboard = () => {
 
   useEffect(() => {
     if (map && maps) {
-      map.panTo(new maps.LatLng(driverCoords.lat, driverCoords.lng));
+      map.panTo(new google.maps.LatLng(driverCoords.lat, driverCoords.lng));
+      /* const geocoder = new google.maps.Geocoder();
+      geocoder.geocode(
+        {
+          location: new google.maps.LatLng(driverCoords.lat, driverCoords.lng),
+        },
+        (results, status) => {
+          console.log(status, results);
+        }
+      ); */
     }
   }, [map, maps, driverCoords.lat, driverCoords.lng]);
 
@@ -64,6 +77,6 @@ export const Dashboard = () => {
   );
 };
 
-const DriverIcon = ({ lat, lng }: ICoords) => {
+const DriverIcon = ({ lat, lng }: IDriverProps) => {
   return <div className="text-lg">🚘</div>;
 };
