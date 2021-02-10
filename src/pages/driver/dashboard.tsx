@@ -8,13 +8,15 @@ interface ICoords {
 
 export const Dashboard = () => {
   const [driverCoords, setDriverCoords] = useState<ICoords>({ lat: 35.255634, lng: 128.612937 });
+  const [map, setMap] = useState<any>();
+  const [maps, setMaps] = useState<any>();
 
   const position = {
     center: {
       lat: 59.95,
       lng: 30.33,
     },
-    zoom: 20,
+    zoom: 16,
   };
 
   const onSuccess = (position: GeolocationPosition) => {
@@ -22,7 +24,6 @@ export const Dashboard = () => {
       coords: { latitude, longitude },
     } = position;
     console.log(position);
-    console.log(latitude, longitude);
     setDriverCoords({ lat: latitude, lng: longitude });
   };
 
@@ -30,33 +31,39 @@ export const Dashboard = () => {
     console.log(error);
   };
 
-  const onApiLoaded = ({ map, maps }: any) => {
-    console.log(map);
-    console.log(maps);
-    setTimeout(() => {
-      map.panTo(new maps.LatLng(driverCoords.lat, driverCoords.lng));
-    }, 2000);
-  };
-
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      console.log("position");
-      console.log(position);
-    }, onError);
     navigator.geolocation.watchPosition(onSuccess, onError, {
       enableHighAccuracy: true,
     });
   });
 
+  useEffect(() => {
+    if (map && maps) {
+      map.panTo(new maps.LatLng(driverCoords.lat, driverCoords.lng));
+    }
+  }, [map, maps, driverCoords.lat, driverCoords.lng]);
+
+  const onApiLoaded = ({ map, maps }: any) => {
+    map.panTo(new maps.LatLng(driverCoords.lat, driverCoords.lng));
+    setMap(map);
+    setMaps(maps);
+  };
+
   return (
-    <div className="overflow-hidden" style={{ width: window.innerWidth, height: "95vh" }}>
+    <div className="overflow-hidden" style={{ width: window.innerWidth, height: "50vh" }}>
       <GoogleMapReact
         bootstrapURLKeys={{ key: "AIzaSyBiDJ6FwMCrCTL9Is6GyT3F0OAaSgBp_7Y" }}
         defaultCenter={position.center}
         defaultZoom={position.zoom}
         yesIWantToUseGoogleMapApiInternals
         onGoogleApiLoaded={onApiLoaded}
-      ></GoogleMapReact>
+      >
+        <DriverIcon lat={driverCoords.lat} lng={driverCoords.lng}></DriverIcon>
+      </GoogleMapReact>
     </div>
   );
+};
+
+const DriverIcon = ({ lat, lng }: ICoords) => {
+  return <div className="text-lg">🚘</div>;
 };
