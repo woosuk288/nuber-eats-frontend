@@ -62,17 +62,49 @@ export const Dashboard = () => {
     setMaps(maps);
   };
 
+  const onGetRouteClick = () => {
+    if (map) {
+      const directionService = new google.maps.DirectionsService();
+      const directionsRenderer = new google.maps.DirectionsRenderer({
+        polylineOptions: {
+          strokeColor: "#000",
+          strokeOpacity: 0.7,
+          strokeWeight: 7,
+        },
+      });
+      directionsRenderer.setMap(map);
+      directionService.route(
+        {
+          origin: {
+            location: new google.maps.LatLng(driverCoords.lat, driverCoords.lng),
+          },
+          destination: {
+            location: new google.maps.LatLng(driverCoords.lat + 0.05, driverCoords.lng + 0.05),
+          },
+          travelMode: google.maps.TravelMode.TRANSIT,
+        },
+        (result, status) => {
+          console.log(result, status);
+          directionsRenderer.setDirections(result);
+        }
+      );
+    }
+  };
+
   return (
-    <div className="overflow-hidden" style={{ width: window.innerWidth, height: "50vh" }}>
-      <GoogleMapReact
-        bootstrapURLKeys={{ key: "AIzaSyBiDJ6FwMCrCTL9Is6GyT3F0OAaSgBp_7Y" }}
-        defaultCenter={position.center}
-        defaultZoom={position.zoom}
-        yesIWantToUseGoogleMapApiInternals
-        onGoogleApiLoaded={onApiLoaded}
-      >
-        <DriverIcon lat={driverCoords.lat} lng={driverCoords.lng}></DriverIcon>
-      </GoogleMapReact>
+    <div>
+      <div className="overflow-hidden" style={{ width: window.innerWidth, height: "50vh" }}>
+        <GoogleMapReact
+          bootstrapURLKeys={{ key: "AIzaSyBiDJ6FwMCrCTL9Is6GyT3F0OAaSgBp_7Y" }}
+          defaultCenter={position.center}
+          defaultZoom={position.zoom}
+          yesIWantToUseGoogleMapApiInternals
+          onGoogleApiLoaded={onApiLoaded}
+        >
+          <DriverIcon lat={driverCoords.lat} lng={driverCoords.lng}></DriverIcon>
+        </GoogleMapReact>
+      </div>
+      <button onClick={onGetRouteClick}>Get Route</button>
     </div>
   );
 };
