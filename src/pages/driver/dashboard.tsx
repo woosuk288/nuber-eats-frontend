@@ -85,7 +85,7 @@ export const Dashboard = () => {
     setMaps(maps);
   };
 
-  const makeRoute = () => {
+  const makeRoute = React.useCallback(() => {
     if (map) {
       const directionService = new google.maps.DirectionsService();
       const directionsRenderer = new google.maps.DirectionsRenderer({
@@ -112,7 +112,10 @@ export const Dashboard = () => {
         }
       );
     }
-  };
+  }, [driverCoords.lat, driverCoords.lng, map]);
+  // const makeRoute = () => {
+
+  // };
 
   const history = useHistory();
   const onCompleted = (data: takeOrder) => {
@@ -134,13 +137,12 @@ export const Dashboard = () => {
   };
 
   const { data: cookedOrdersData } = useSubscription<cookedOrders>(COOKED_ORDERS_SUBSCRIPTION);
-
+  // console.log("cookedOrdersData: ", cookedOrdersData);
   useEffect(() => {
-    console.log(cookedOrdersData?.cookedOrders);
     if (cookedOrdersData?.cookedOrders.id) {
       makeRoute();
     }
-  }, [cookedOrdersData]);
+  }, [cookedOrdersData, makeRoute]);
 
   return (
     <div>
