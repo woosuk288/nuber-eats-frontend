@@ -45,19 +45,30 @@ export default function Login() {
   const [loginMutation, { data: loginMutaionResult, loading }] = useMutation<
     loginMutation,
     loginMutationVariables
-  >(LOGIN_MUTATION, { onCompleted });
+  >(LOGIN_MUTATION, {
+    onCompleted,
+    onError(error) {
+      console.error("error :>>", error.message);
+      alert(error.message);
+    },
+  });
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (!loading) {
       const { email, password } = getValues();
-      loginMutation({
-        variables: {
-          loginInput: {
-            email,
-            password,
+      try {
+        await loginMutation({
+          variables: {
+            loginInput: {
+              email,
+              password,
+            },
           },
-        },
-      });
+        });
+      } catch (error) {
+        console.log(error.message);
+        alert(`hey ${error.message}`);
+      }
     }
   };
 
