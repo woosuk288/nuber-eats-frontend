@@ -80,8 +80,13 @@ export const AddRestaurant = () => {
       const actualFile = file[0];
       const formBody = new FormData();
       formBody.append("file", actualFile);
+
+      const uploadPath =
+        process.env.NODE_ENV === "production"
+          ? "https://nuber-eats-b.herokuapp.com/uploads"
+          : "http://localhost:4000/uploads";
       const { url: coverImg } = await (
-        await fetch("http://localhost:4000/uploads", {
+        await fetch(uploadPath, {
           method: "POST",
           body: formBody,
         })
