@@ -148,7 +148,7 @@ export const Dashboard = () => {
     <div>
       <div className="overflow-hidden" style={{ width: window.innerWidth, height: "50vh" }}>
         <GoogleMapReact
-          bootstrapURLKeys={{ key: "AIzaSyBiDJ6FwMCrCTL9Is6GyT3F0OAaSgBp_7Y" }}
+          bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAP_KEY! }}
           defaultCenter={position.center}
           defaultZoom={position.zoom}
           yesIWantToUseGoogleMapApiInternals
