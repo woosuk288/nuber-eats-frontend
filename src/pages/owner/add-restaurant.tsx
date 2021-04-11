@@ -62,7 +62,7 @@ export const AddRestaurant = () => {
       history.push("/");
     }
   };
-  const [createRestaurantMutation, { data }] = useMutation<
+  const [createRestaurantMutation, { data, error, loading }] = useMutation<
     createRestaurant,
     createRestaurantVariables
   >(CREATE_RESTAURANT_MUTATION, { onCompleted });
@@ -104,7 +104,9 @@ export const AddRestaurant = () => {
           },
         },
       });
-    } catch (error) {}
+    } catch (error) {
+      console.error("error : ", error);
+    }
   };
 
   return (
@@ -141,8 +143,13 @@ export const AddRestaurant = () => {
         <div>
           <input type="file" name="file" accept="image/*" ref={register({ required: true })} />
         </div>
-        <Button loading={uploading} canClick={formState.isValid} actionText="Create Restaurant" />
+        <Button
+          loading={uploading || loading}
+          canClick={formState.isValid}
+          actionText="Create Restaurant"
+        />
         {data?.createRestaurant.error && <FormError errorMessage={data.createRestaurant.error} />}
+        {error && <FormError errorMessage={"Sorry, something went wrong."} />}
       </form>
     </div>
   );
